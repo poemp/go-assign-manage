@@ -3,5 +3,5 @@ go 任务编排
 
 # First 
 `````
-go get github.com/micro/micro/v3
+go get -u github.com/nacos-group/nacos-sdk-go
 `````
