@@ -1,4 +1,4 @@
-package task_test
+package service
 
 
 import (

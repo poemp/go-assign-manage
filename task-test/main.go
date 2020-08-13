@@ -1,14 +1,15 @@
 package main
 
 import (
-"fmt"
-"time"
+	"fmt"
+	"github.com/poemp/go-assign-manage/task-test/service"
+	"time"
 
-"github.com/nacos-group/nacos-sdk-go/clients"
-"github.com/nacos-group/nacos-sdk-go/common/constant"
-"github.com/nacos-group/nacos-sdk-go/model"
-"github.com/nacos-group/nacos-sdk-go/util"
-"github.com/nacos-group/nacos-sdk-go/vo"
+	"github.com/nacos-group/nacos-sdk-go/clients"
+	"github.com/nacos-group/nacos-sdk-go/common/constant"
+	"github.com/nacos-group/nacos-sdk-go/model"
+	"github.com/nacos-group/nacos-sdk-go/util"
+	"github.com/nacos-group/nacos-sdk-go/vo"
 )
 
 func main() {
@@ -24,8 +25,8 @@ func main() {
 		TimeoutMs:           5000,
 		ListenInterval:      10000,
 		NotLoadCacheAtStart: true,
-		LogDir:              "/tmp/nacos/log",
-		CacheDir:            "/tmp/nacos/cache",
+		LogDir:              "e:/tmp/nacos/log",
+		CacheDir:            "e:/tmp/nacos/cache",
 		RotateTime:          "1h",
 		MaxAge:              3,
 		LogLevel:            "debug",
@@ -42,21 +43,17 @@ func main() {
 
 	//Register with default cluster and group
 	//ClusterName=DEFAULT,GroupName=DEFAULT_GROUP
-	ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
-		Ip:          "10.0.0.10",
+	service.ExampleServiceClient_DeRegisterServiceInstance(client, vo.DeregisterInstanceParam{
+		Ip:          "192.168.51.152",
 		Port:        8848,
 		ServiceName: "demo.go",
-		Weight:      10,
-		Enable:      true,
-		Healthy:     true,
 		Ephemeral:   true,
-		Metadata:    map[string]string{"idc": "shanghai"},
 	})
 
 	//Register with cluster name
 	//GroupName=DEFAULT_GROUP
-	ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
-		Ip:          "10.0.0.11",
+	service.ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
+		Ip:          "192.168.51.152",
 		Port:        8848,
 		ServiceName: "demo.go",
 		Weight:      10,
@@ -68,8 +65,8 @@ func main() {
 
 	//Register different cluster
 	//GroupName=DEFAULT_GROUP
-	ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
-		Ip:          "10.0.0.12",
+	service.ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
+		Ip:          "192.168.51.152",
 		Port:        8848,
 		ServiceName: "demo.go",
 		Weight:      10,
@@ -80,8 +77,8 @@ func main() {
 	})
 
 	//Register different group
-	ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
-		Ip:          "10.0.0.13",
+	service.ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
+		Ip:          "192.168.51.152",
 		Port:        8848,
 		ServiceName: "demo.go",
 		Weight:      10,
@@ -91,8 +88,8 @@ func main() {
 		Healthy:     true,
 		Ephemeral:   true,
 	})
-	ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
-		Ip:          "10.0.0.14",
+	service.ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
+		Ip:          "192.168.51.152",
 		Port:        8848,
 		ServiceName: "demo.go",
 		Weight:      10,
@@ -105,9 +102,9 @@ func main() {
 
 	//DeRegister with ip,port,serviceName
 	//ClusterName=DEFAULT, GroupName=DEFAULT_GROUP
-	//Note:ip=10.0.0.10,port=8848 should belong to the cluster of DEFAULT and the group of DEFAULT_GROUP.
-	ExampleServiceClient_DeRegisterServiceInstance(client, vo.DeregisterInstanceParam{
-		Ip:          "10.0.0.10",
+	//Note:ip=192.168.51.152,port=8848 should belong to the cluster of DEFAULT and the group of DEFAULT_GROUP.
+	service.ExampleServiceClient_DeRegisterServiceInstance(client, vo.DeregisterInstanceParam{
+		Ip:          "192.168.51.152",
 		Port:        8848,
 		ServiceName: "demo.go",
 		Ephemeral:   true, //it must be true
@@ -115,9 +112,9 @@ func main() {
 
 	//DeRegister with ip,port,serviceName,cluster
 	//GroupName=DEFAULT_GROUP
-	//Note:ip=10.0.0.10,port=8848,cluster=cluster-a should belong to the group of DEFAULT_GROUP.
-	ExampleServiceClient_DeRegisterServiceInstance(client, vo.DeregisterInstanceParam{
-		Ip:          "10.0.0.11",
+	//Note:ip=192.168.51.152,port=8848,cluster=cluster-a should belong to the group of DEFAULT_GROUP.
+	service.ExampleServiceClient_DeRegisterServiceInstance(client, vo.DeregisterInstanceParam{
+		Ip:          "192.168.51.152",
 		Port:        8848,
 		ServiceName: "demo.go",
 		Cluster:     "cluster-a",
@@ -125,8 +122,8 @@ func main() {
 	})
 
 	//DeRegister with ip,port,serviceName,cluster,group
-	ExampleServiceClient_DeRegisterServiceInstance(client, vo.DeregisterInstanceParam{
-		Ip:          "10.0.0.14",
+	service.ExampleServiceClient_DeRegisterServiceInstance(client, vo.DeregisterInstanceParam{
+		Ip:          "192.168.51.152",
 		Port:        8848,
 		ServiceName: "demo.go",
 		Cluster:     "cluster-b",
@@ -136,52 +133,52 @@ func main() {
 
 	//Get service with serviceName
 	//ClusterName=DEFAULT, GroupName=DEFAULT_GROUP
-	ExampleServiceClient_GetService(client, vo.GetServiceParam{
+	service.ExampleServiceClient_GetService(client, vo.GetServiceParam{
 		ServiceName: "demo.go",
 	})
 	//Get service with serviceName and cluster
 	//GroupName=DEFAULT_GROUP
-	ExampleServiceClient_GetService(client, vo.GetServiceParam{
+	service.ExampleServiceClient_GetService(client, vo.GetServiceParam{
 		ServiceName: "demo.go",
 		Clusters:    []string{"cluster-a", "cluster-b"},
 	})
 	//Get service with serviceName ,group
 	//ClusterName=DEFAULT
-	ExampleServiceClient_GetService(client, vo.GetServiceParam{
+	service.ExampleServiceClient_GetService(client, vo.GetServiceParam{
 		ServiceName: "demo.go",
 		GroupName:   "group-a",
 	})
 
 	//SelectAllInstance return all instances,include healthy=false,enable=false,weight<=0
 	//ClusterName=DEFAULT, GroupName=DEFAULT_GROUP
-	ExampleServiceClient_SelectAllInstances(client, vo.SelectAllInstancesParam{
+	service.ExampleServiceClient_SelectAllInstances(client, vo.SelectAllInstancesParam{
 		ServiceName: "demo.go",
 	})
 
 	//SelectAllInstance
 	//GroupName=DEFAULT_GROUP
-	ExampleServiceClient_SelectAllInstances(client, vo.SelectAllInstancesParam{
+	service.ExampleServiceClient_SelectAllInstances(client, vo.SelectAllInstancesParam{
 		ServiceName: "demo.go",
 		Clusters:    []string{"cluster-a", "cluster-b"},
 	})
 
 	//SelectAllInstance
 	//ClusterName=DEFAULT
-	ExampleServiceClient_SelectAllInstances(client, vo.SelectAllInstancesParam{
+	service.ExampleServiceClient_SelectAllInstances(client, vo.SelectAllInstancesParam{
 		ServiceName: "demo.go",
 		GroupName:   "group-a",
 	})
 
 	//SelectInstances only return the instances of healthy=${HealthyOnly},enable=true and weight>0
 	//ClusterName=DEFAULT,GroupName=DEFAULT_GROUP
-	ExampleServiceClient_SelectInstances(client, vo.SelectInstancesParam{
+	service.ExampleServiceClient_SelectInstances(client, vo.SelectInstancesParam{
 		ServiceName: "demo.go",
 	})
 
 	//SelectOneHealthyInstance return one instance by WRR strategy for load balance
 	//And the instance should be health=true,enable=true and weight>0
 	//ClusterName=DEFAULT,GroupName=DEFAULT_GROUP
-	ExampleServiceClient_SelectOneHealthyInstance(client, vo.SelectOneHealthInstanceParam{
+	service.ExampleServiceClient_SelectOneHealthyInstance(client, vo.SelectOneHealthInstanceParam{
 		ServiceName: "demo.go",
 	})
 
@@ -194,7 +191,7 @@ func main() {
 			fmt.Printf("callback111 return services:%s \n\n", util.ToJsonString(services))
 		},
 	}
-	ExampleServiceClient_Subscribe(client, param)
+	service.ExampleServiceClient_Subscribe(client, param)
 	param2 := &vo.SubscribeParam{
 		ServiceName: "demo.go",
 		Clusters:    []string{"cluster-b"},
@@ -202,9 +199,9 @@ func main() {
 			fmt.Printf("callback222 return services:%s \n\n", util.ToJsonString(services))
 		},
 	}
-	ExampleServiceClient_Subscribe(client, param2)
-	ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
-		Ip:          "10.0.0.112",
+	service.ExampleServiceClient_Subscribe(client, param2)
+	service.ExampleServiceClient_RegisterServiceInstance(client, vo.RegisterInstanceParam{
+		Ip:          "192.168.51.152",
 		Port:        8848,
 		ServiceName: "demo.go",
 		Weight:      10,
@@ -217,9 +214,9 @@ func main() {
 	time.Sleep(10 * time.Second)
 
 	//Now we just unsubscribe callback1, and callback2 will still receive change event
-	ExampleServiceClient_UnSubscribe(client, param)
-	ExampleServiceClient_DeRegisterServiceInstance(client, vo.DeregisterInstanceParam{
-		Ip:          "10.0.0.112",
+	service.ExampleServiceClient_UnSubscribe(client, param)
+	service.ExampleServiceClient_DeRegisterServiceInstance(client, vo.DeregisterInstanceParam{
+		Ip:          "192.168.51.152",
 		Ephemeral:   true,
 		Port:        8848,
 		ServiceName: "demo.go",
@@ -231,12 +228,12 @@ func main() {
 	//GeAllService will get the list of service name
 	//NameSpace default value is public.If the client set the namespaceId, NameSpace will use it.
 	//GroupName default value is DEFAULT_GROUP
-	ExampleServiceClient_GetAllService(client, vo.GetAllServiceInfoParam{
+	service.ExampleServiceClient_GetAllService(client, vo.GetAllServiceInfoParam{
 		PageNo:   1,
 		PageSize: 10,
 	})
 
-	ExampleServiceClient_GetAllService(client, vo.GetAllServiceInfoParam{
+	service.ExampleServiceClient_GetAllService(client, vo.GetAllServiceInfoParam{
 		NameSpace: "0e83cc81-9d8c-4bb8-a28a-ff703187543f",
 		PageNo:    1,
 		PageSize:  10,
