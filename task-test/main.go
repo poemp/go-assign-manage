@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/poemp/go-assign-manage/task-test/service"
+	"os"
 	"time"
 
 	"github.com/nacos-group/nacos-sdk-go/clients"
@@ -12,7 +14,50 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/vo"
 )
 
+func PathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
+}
+
+func CreateFileOrDir(path string) error{
+
+	b, err := PathExists(path)
+	if err != nil {
+		fmt.Printf("PathExists(%s),err(%v)\n", path, err)
+	}
+	if b {
+		fmt.Printf("path %s 存在\n", path)
+	} else {
+		fmt.Printf("path %s 不存在\n", path)
+		err := os.MkdirAll(path, os.ModePerm)
+		if err != nil {
+			fmt.Printf("mkdir failed![%v]\n", err)
+			return errors.New(err.Error())
+		} else {
+			fmt.Printf("mkdir success!\n")
+		}
+	}
+	return nil
+}
+
 func main() {
+	logDir := "c:/tmp/nacos/log"
+	cacheDir := "c:/tmp/nacos/cache"
+
+	c :=CreateFileOrDir(logDir)
+	if c != nil {
+		panic(c)
+	}
+	ccc :=CreateFileOrDir(cacheDir)
+	if ccc != nil {
+		panic(ccc)
+	}
 	sc := []constant.ServerConfig{
 		{
 			IpAddr: "console.nacos.io",
@@ -25,8 +70,8 @@ func main() {
 		TimeoutMs:           5000,
 		ListenInterval:      10000,
 		NotLoadCacheAtStart: true,
-		LogDir:              "c:/tmp/nacos/log",
-		CacheDir:            "c:/tmp/nacos/cache",
+		LogDir:              logDir,
+		CacheDir:            cacheDir,
 		RotateTime:          "1h",
 		MaxAge:              3,
 		LogLevel:            "debug",
